@@ -1,2 +1,2 @@
 # Dumbelek
-Text processing library for languages Turkish and English
+Text processing library for Turkish and English languages
