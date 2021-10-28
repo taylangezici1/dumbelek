@@ -1,6 +1,6 @@
 import re
 from TurkishStemmer import TurkishStemmer
-from stopwordlist import StopWordList
+from dumbelek.stopwordlist import StopWordList
 from sklearn.feature_extraction.text import CountVectorizer
 import pandas as pd
 
