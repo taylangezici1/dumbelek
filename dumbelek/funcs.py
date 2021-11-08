@@ -57,12 +57,14 @@ class StopWords:
                         word_list[i] = None
                     else:
                         to_return += word_list[i] + " "
+                return to_return
             elif detectedLang == "tr":
                 for i in range(0,len(word_list),1):
                     if word_list[i].lower() in StopWordList.get_stopwords_tr():
                         word_list[i] = None
                     else:
                         to_return += word_list[i] + " "
+                return to_return
             else:
                 logging.error("The text is neither English nor Turkish")
                 return text
@@ -80,12 +82,12 @@ class StopWords:
         Returns a boolean value whether the word is in the stop-word list
         '''
         if not lang:
-            return word in StopWords.get_stopwords()
+            return word in StopWordList.get_stopwords()
         else:
             if lang == "en":
-                return word in StopWords.get_stopwords_en()
+                return word in StopWordList.get_stopwords_en()
             elif lang == "tr":
-                return word in StopWords.get_stopwords_en()
+                return word in StopWordList.get_stopwords_en()
             else:
                 logging.warning("Dumbelek is only capable of detecting English and Turkish stop-words")
                 return False
