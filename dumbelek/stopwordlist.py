@@ -1,6 +1,6 @@
 import nltk
 class StopWordList:
-    def get_stopwords():
+    def get_stopwords_tr():
         stopwordList = ["a", "acaba", "altı", "altmış", "ama", "ancak", "arada", "artık", "asla", "aslında", "aslında", "ayrıca", "az", "bana", "bazen", "bazı",
                         "bazıları", "belki", "ben", "benden", "beni", "benim", "beri", "beş", "bile", "bilhassa", "bin", "bir", "biraz", "birçoğu", "birçok", "biri",
                         "birisi", "birkaç", "birşey", "biz", "bizden", "bize", "bizi", "bizim", "böyle", "böylece", "bu", "buna", "bunda", "bundan", "bunlar",
@@ -19,4 +19,10 @@ class StopWordList:
                         "tamamen", "tarafından", "trilyon", "tüm", "tümü", "u", "ü", "üç", "un", "ün", "üzere", "var", "vardı", "ve", "veya", "ya", "yani", "yapacak",
                         "yapılan", "yapılması", "yapıyor", "yapmak", "yaptı", "yaptığı", "yaptığını", "yaptıkları", "ye", "yedi", "yerine", "yetmiş", "yi", "yı", "yine",
                         "yirmi", "yoksa", "yu", "yüz", "zaten", "zira"]
-        return stopwordList + nltk.corpus.stopwords.words('english')
+        return stopwordList
+    
+    def get_stopwords_en():
+        return nltk.corpus.stopwords.words('english')
+    
+    def get_stopwords():
+        return StopWordList.get_stopwords_en() + StopWordList.get_stopwords_tr()

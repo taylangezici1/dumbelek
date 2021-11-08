@@ -3,51 +3,92 @@ from TurkishStemmer import TurkishStemmer
 from dumbelek.stopwordlist import StopWordList
 from sklearn.feature_extraction.text import CountVectorizer
 import pandas as pd
+import logging
+from googletrans import Translator
 
-class StopWordsTr:
-    def get_stopwordList():
+class StopWords:
+    def get_stopwordList(lang=None):
         '''
+        Parameters
+        ----------
+        lang : str
+        
         Returns
         -------
         stopwordlist : list
             Returns all the stopwords as a list
         '''
-        return StopWordList.get_stopwords()
+        if not lang:
+            return StopWordList.get_stopwords()
+        elif lang == "en":
+            return StopWordList.get_stopwords_en()
+        elif lang == "tr":
+            return StopWordList.get_stopwords_tr()
+        else:
+            logging.error("Dumbelek only contains English and Turkish stop-words! ['en','tr']")
+            return None
     
-    def remove_stopwords(text):
+    def remove_stopwords(text,check_lang=False):
         '''
         Parameters
         ----------
         text : string
+        check_lang : bool
 
         Returns
         -------
         text : string
             Removes the Turkish stop-words from given text
         '''
-        text = text.lower()
         to_return = ''
         word_list = text.split()
-        for i in range(0,len(word_list),1):
-            if word_list[i] in StopWordsTr.get_stopwordList():
-                word_list[i] = None
+        if not check_lang:
+            for i in range(0,len(word_list),1):
+                if word_list[i].lower() in StopWordList.get_stopwords():
+                    word_list[i] = None
+                else:
+                    to_return += word_list[i] + " "
+            return to_return
+        else:
+            detectedLang = str(Translator().detect(text))[14:16]
+            if detectedLang == "en":
+                for i in range(0,len(word_list),1):
+                    if word_list[i].lower() in StopWordList.get_stopwords_en():
+                        word_list[i] = None
+                    else:
+                        to_return += word_list[i] + " "
+            elif detectedLang == "tr":
+                for i in range(0,len(word_list),1):
+                    if word_list[i].lower() in StopWordList.get_stopwords_tr():
+                        word_list[i] = None
+                    else:
+                        to_return += word_list[i] + " "
             else:
-                to_return += word_list[i] + " "
-        return to_return
+                logging.error("The text is neither English nor Turkish")
+                return text
        
-    def is_stopword(word):
+    def is_stopword(word,lang=None):
         #Returns a boolean value whether the word is in the stop-word list
         '''
         Parameters
         ----------
         word : string
-
+        lang : string (["en","tr"])
         Returns
         -------
         wordInList : bool
         Returns a boolean value whether the word is in the stop-word list
         '''
-        return word in StopWordsTr.get_stopwordList()
+        if not lang:
+            return word in StopWords.get_stopwords()
+        else:
+            if lang == "en":
+                return word in StopWords.get_stopwords_en()
+            elif lang == "tr":
+                return word in StopWords.get_stopwords_en()
+            else:
+                logging.warning("Dumbelek is only capable of detecting English and Turkish stop-words")
+                return False
     
 class Cleaner:
     def remove_links(text):
@@ -92,7 +133,7 @@ class Cleaner:
         '''
         
         text = Cleaner.clean_text(text)
-        text = StopWordsTr.remove_stopwords(text)
+        text = StopWords.remove_stopwords(text)
         return text
     
 class NgramCalc:
@@ -136,7 +177,7 @@ class NgramCalc:
         ngramDict : list 
         ## a list of dictionaries that contains the ngram text and frequencies
         '''
-        c_vec = CountVectorizer(ngram_range=ngram_range,stop_words=StopWordsTr.get_stopwordList())
+        c_vec = CountVectorizer(ngram_range=ngram_range,stop_words=StopWords.get_stopwords())
         textList=[Cleaner.clean_all(x) for x in textList]
         if stem:
             for text in textList:
@@ -179,7 +220,7 @@ class NgramCalc:
         -------
         ngramDict : list ## a list of dictionaries that contains the ngram text and frequencies
         '''
-        c_vec = CountVectorizer(ngram_range=ngram_range,stop_words=StopWordsTr.get_stopwordList())
+        c_vec = CountVectorizer(ngram_range=ngram_range,stop_words=StopWords.get_stopwords())
         textList=[Cleaner.clean_all(x) for x in list(textSeries)]
         if stem:
             for text in textList:
@@ -206,4 +247,3 @@ class NgramCalc:
         ngram_json = df_ngram.to_dict(orient='records')
     
         return ngram_json
-    
