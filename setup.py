@@ -2,13 +2,13 @@ from setuptools import setup
 setup(
   name = 'dumbelek',         # How you named your package folder (MyLib)
   packages = ['dumbelek'],   # Chose the same as "name"
-  version = '2.0.1',      # Start with a small number and increase it with every change you make
+  version = '2.1.0',      # Start with a small number and increase it with every change you make
   license='MIT',        # Chose a license from here: https://help.github.com/articles/licensing-a-repository
   description = 'Text processing library for languages Turkish and English',   # Give a short description about your library
   author = 'Taylan Gezici',                   # Type in your name
   author_email = 'taylangezici@gmail.com',      # Type in your E-Mail
   url = 'https://github.com/taylangezici/dumbelek',   # Provide either the link to your github or to your website
-  download_url = 'https://github.com/taylangezici/dumbelek/archive/refs/tags/v2.0.1.tar.gz', 
+  download_url = 'https://github.com/taylangezici/dumbelek/archive/refs/tags/v2.1.0.tar.gz', 
   keywords = ['none'],   # Keywords that define your package best
   install_requires=[            # I get to this in a second
           'nltk',

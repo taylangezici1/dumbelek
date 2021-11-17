@@ -25,16 +25,16 @@ class StopWords:
         elif lang == "tr":
             return StopWordList.get_stopwords_tr()
         else:
-            logging.error("Dumbelek only contains English and Turkish stop-words! ['en','tr']")
+            logging.error("Dumbelek only contains English and Turkish stop-words!")
             return None
     
-    def remove_stopwords(text,check_lang=False):
+    def remove_stopwords(text,lang=None,check_lang=False,logs=True):
         '''
         Parameters
         ----------
         text : string
         check_lang : bool
-
+        logs : bool
         Returns
         -------
         text : string
@@ -42,14 +42,34 @@ class StopWords:
         '''
         to_return = ''
         word_list = text.split()
-        if not check_lang:
+        if not check_lang and not lang:
             for i in range(0,len(word_list),1):
-                if word_list[i].lower() in StopWordList.get_stopwords():
-                    word_list[i] = None
-                else:
-                    to_return += word_list[i] + " "
-            return to_return
-        else:
+                    if word_list[i].lower() in StopWordList.get_stopwords():
+                        word_list[i] = None
+                    else:
+                        to_return += word_list[i] + " "
+        elif not check_lang and lang:
+            if lang.lower() in ["en","english","eng"]:
+                for i in range(0,len(word_list),1):
+                    if word_list[i].lower() in StopWordList.get_stopwords_en():
+                        word_list[i] = None
+                    else:
+                        to_return += word_list[i] + " "
+            elif lang.lower() in ["tr","turkish","turkce","türkçe"]:
+                for i in range(0,len(word_list),1):
+                    if word_list[i].lower() in StopWordList.get_stopwords_tr():
+                        word_list[i] = None
+                    else:
+                        to_return += word_list[i] + " "
+            else:
+                for i in range(0,len(word_list),1):
+                    if word_list[i].lower() in StopWordList.get_stopwords():
+                        word_list[i] = None
+                    else:
+                        to_return += word_list[i] + " "
+                        if logs:logging.warning("Dumbelek is only capable of detecting English and Turkish stop-words")
+                        
+        elif check_lang and not lang:
             detectedLang = str(Translator().detect(text))[14:16]
             if detectedLang == "en":
                 for i in range(0,len(word_list),1):
@@ -57,25 +77,32 @@ class StopWords:
                         word_list[i] = None
                     else:
                         to_return += word_list[i] + " "
-                return to_return
             elif detectedLang == "tr":
                 for i in range(0,len(word_list),1):
                     if word_list[i].lower() in StopWordList.get_stopwords_tr():
                         word_list[i] = None
                     else:
                         to_return += word_list[i] + " "
-                return to_return
             else:
-                logging.error("The text is neither English nor Turkish")
-                return text
+                for i in range(0,len(word_list),1):
+                    if word_list[i].lower() in StopWordList.get_stopwords():
+                        word_list[i] = None
+                    else:
+                        to_return += word_list[i] + " "
+                if logs:logging.warning(f"Detected language of the text is neither Turkish nor English ({detectedLang})")
+        elif check_lang and lang:
+            raise ValueError("At least one of the following parameters should be None: check_lang, lang")
+        return to_return
+                            
        
-    def is_stopword(word,lang=None):
+    def is_stopword(word,lang=None,logs=True):
         #Returns a boolean value whether the word is in the stop-word list
         '''
         Parameters
         ----------
         word : string
-        lang : string (["en","tr"])
+        lang : string
+        logs : bool
         Returns
         -------
         wordInList : bool
@@ -84,12 +111,12 @@ class StopWords:
         if not lang:
             return word in StopWordList.get_stopwords()
         else:
-            if lang == "en":
+            if lang.lower() in ["en","english","eng"]:
                 return word in StopWordList.get_stopwords_en()
-            elif lang == "tr":
+            elif lang.lower() in ["tr","turkish","turkce","türkçe"]:
                 return word in StopWordList.get_stopwords_en()
             else:
-                logging.warning("Dumbelek is only capable of detecting English and Turkish stop-words")
+                if logs:logging.warning("Dumbelek is only capable of detecting English and Turkish stop-words")
                 return False
     
 class Cleaner:
