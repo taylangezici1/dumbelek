@@ -206,7 +206,7 @@ class NgramCalc:
         ngramDict : list 
         ## a list of dictionaries that contains the ngram text and frequencies
         '''
-        c_vec = CountVectorizer(ngram_range=ngram_range,stop_words=StopWords.get_stopwords())
+        c_vec = CountVectorizer(ngram_range=ngram_range,stop_words=StopWords.get_stopwordList())
         textList=[Cleaner.clean_all(x) for x in textList]
         if stem:
             for text in textList:
@@ -249,7 +249,7 @@ class NgramCalc:
         -------
         ngramDict : list ## a list of dictionaries that contains the ngram text and frequencies
         '''
-        c_vec = CountVectorizer(ngram_range=ngram_range,stop_words=StopWords.get_stopwords())
+        c_vec = CountVectorizer(ngram_range=ngram_range,stop_words=StopWords.get_stopwordList())
         textList=[Cleaner.clean_all(x) for x in list(textSeries)]
         if stem:
             for text in textList:
