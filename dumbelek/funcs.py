@@ -148,7 +148,7 @@ class Cleaner:
         text = re.sub('([0-9]+)', '', text)  # remove numbers
         return text
     
-    def clean_all(text): 
+    def clean_all(text,lang=None): 
         '''
         Parameters
         ----------
@@ -162,7 +162,7 @@ class Cleaner:
         '''
         
         text = Cleaner.clean_text(text)
-        text = StopWords.remove_stopwords(text)
+        text = StopWords.remove_stopwords(text,lang)
         return text
     
 class NgramCalc:
